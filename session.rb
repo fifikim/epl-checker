@@ -7,13 +7,6 @@ class Session
   def initialize(data_file)
     @data = data_file
     @epl_sides = [33, 34, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48, 49, 50, 51, 52, 55, 63, 66, 71]
-    @leagues = {
-      39 => "PL",
-      2 => "UCL",
-      848 => "UECL",
-      45 => "FA",
-      48 => "EFL",
-    }
   end
 
   def greeting
@@ -38,11 +31,10 @@ class Session
     if response.code != 200
       puts "fetch failed"
     else
-      data = response.parsed_response["response"]
-
+      data = response.parsed_response
       case type
-        when "standings" then get_standings(data[0]["league"]) 
-        when "matches today" then get_matches_today(data) 
+        when "standings" then get_standings(data["response"][0]["league"]) 
+        when "matches today" then get_matches_today(data["response"]) 
       end
     end
   end
@@ -59,13 +51,16 @@ class Session
 
   def get_matches_today(matches)
     puts "\nAll matches today featuring PL sides:"
+    # puts matches
+
     pl_matches = matches.select { |match| @epl_sides.include?(match["teams"]["home"]["id"]) || @epl_sides.include?(match["teams"]["away"]["id"]) }
+    # puts pl_matches
 
     pl_matches.each do |unformatted_match|
       match = Parse.match(unformatted_match)
       puts "#{match[:time]} | #{match[:tie]} | #{match[:league]} | #{match[:round]}"
     end
-
+    
   end
 
   def farewell

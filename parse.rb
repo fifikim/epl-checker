@@ -1,8 +1,7 @@
 class Parse
-
   def self.standing(team)
-    goalsf: team["all"]["goals"]["for"].to_i
-    goalsa: team["all"]["goals"]["against"].to_i
+    goalsf = team["all"]["goals"]["for"].to_i
+    goalsa = team["all"]["goals"]["against"].to_i
     parsed_team = {
       rank: team["rank"].to_s.rjust(2),
       name: team["team"]["name"].ljust(20),
@@ -18,12 +17,18 @@ class Parse
   end
 
   def self.match(match)
+    leagues = {
+      39 => "PL",
+      2 => "UCL",
+      848 => "UECL",
+      45 => "FA",
+      48 => "EFL",
+    }
     parsed_match = {
       time: match["fixture"]["date"].split("T")[1].split("+")[0],
       tie: "#{match["teams"]["home"]["name"]} vs. #{match["teams"]["away"]["name"]}".ljust(22),
-      league: @leagues[match["league"]["id"]].ljust(4),
+      league: leagues[match["league"]["id"]].ljust(4),
       round: match["league"]["round"],
     }
   end
-
 end
