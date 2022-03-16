@@ -1,4 +1,5 @@
 require 'httparty'
+require 'json'
 require_relative 'keys'
 
 class Session
@@ -20,7 +21,8 @@ class Session
 
     case type
       when "standings" then endpoint = "/standings?league=39&season=2021"
-      when "matches today" then endpoint = "/standings?league=39&season=2021" 
+      when "matches today" then endpoint = "/fixtures?date=2022-03-16" 
+      when "epl sides" then endpoint = "/teams?league=39&season=2021"
     end
 
     response = call("#{base_url}#{endpoint}")
@@ -32,15 +34,15 @@ class Session
 
       case type
         when "standings" then get_standings(data["response"][0]["league"]) 
-        when "matches today" then get_matches_today(data) 
+        when "matches today" then get_matches_today(data["response"]) 
+        when "epl sides" then data["response"]
       end
-
     end
   end
 
   def get_standings(data)
     puts "\n\nCurrent Standings: #{data["name"]}"
-    puts " # | Name                 | MP |  W |  D |  L | GF | GA |  GD | P " 
+    puts " # | Name                 | MP |  W |  D |  L | GF | GA |  GD |  P " 
     teams = data["standings"][0]
 
     teams.each do |team|
@@ -50,10 +52,17 @@ class Session
     end
   end
 
-  def get_matches_today(data)
-    puts "\n\nMatches Today: <<date>>"
+  def get_matches_today(matches)
+    puts "\nAll matches today featuring PL sides: <<date>>"
+
+    epl_sides = fetch("epl sides").map { |team| team["team"]["id"] }
+    matches.select! { |match| epl_sides.include?(match["teams"]["home"]["id"]) || epl_sides.include?(match["teams"]["away"]["id"]) }
+    
+    matches.each_with_index do |match, index|
+      puts "#{match["fixture"]["date"].split("T")[1]} - #{match["teams"]["home"]["name"]} vs. #{match["teams"]["away"]["name"]}"
+    end
+
   end
-      
 
   def farewell
     "Thanks for using EPL Checker. Good bye."
