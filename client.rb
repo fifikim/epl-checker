@@ -6,9 +6,9 @@ session = Session.new(data_file: 'current_session')
 puts session.greeting
 
 puts "What do you want to look up?"
-fetch_type = gets.chomp
+query_type = gets.chomp
 
-session.fetch(fetch_type) 
+session.query(query_type) 
 
 
 

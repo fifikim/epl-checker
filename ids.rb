@@ -1,17 +1,18 @@
 class Ids
-  attr_accessor :leagues, :clubs
+  attr_accessor :leagues, :club_names, :club_ids
   
   def self.leagues
     leagues = {
       39 => "PL",
       2 => "UCL",
+      3 => "UEL",
       848 => "UECL",
       45 => "FA",
       48 => "EFL",
     }
   end
 
-  def self.clubs
+  def self.club_names
     clubs = {
       33 => "Manchester United", 
       34 => "Newcastle", 
@@ -33,6 +34,12 @@ class Ids
       63 => "Leeds", 
       66 => "Aston Villa", 
       71 => "Norwich",
+    }
+  end
+
+  def self.club_ids
+    names = {
+      /(tot|spurs|tottenham)/i => 47,
     }
   end
 
