@@ -1,7 +1,9 @@
 require 'httparty'
 require 'json'
+require 'date'
 require_relative 'keys'
 require_relative 'parse'
+require_relative 'ids'
 
 class Session
   def initialize(data_file)
@@ -23,7 +25,8 @@ class Session
 
     case type
       when "standings" then endpoint = "/standings?league=39&season=2021"
-      when "matches today" then endpoint = "/fixtures?date=2022-03-16" 
+      when "matches today" then endpoint = "/fixtures?date=#{Date.today}" 
+      # when "tottenham matches" then endpoint = 
     end
 
     response = call("#{base_url}#{endpoint}")
@@ -35,6 +38,7 @@ class Session
       case type
         when "standings" then get_standings(data["response"][0]["league"]) 
         when "matches today" then get_matches_today(data["response"]) 
+        when "spurs matches" then get_spurs(data["response"])
       end
     end
   end
@@ -50,18 +54,21 @@ class Session
   end
 
   def get_matches_today(matches)
-    puts "\nAll matches today featuring PL sides:"
-    # puts matches
+    puts "\nAll matches today (#{Date.today}) featuring Premiere League sides:"
 
     pl_matches = matches.select { |match| @epl_sides.include?(match["teams"]["home"]["id"]) || @epl_sides.include?(match["teams"]["away"]["id"]) }
-    # puts pl_matches
 
     pl_matches.each do |unformatted_match|
       match = Parse.match(unformatted_match)
       puts "#{match[:time]} | #{match[:tie]} | #{match[:league]} | #{match[:round]}"
     end
-    
   end
+
+  # def get_clubs(clubs)
+  #   # puts "clubs:"
+  #   # puts JSON.pretty_generate(clubs)
+  #   puts Ids.clubs[47]
+  # end
 
   def farewell
     "Thanks for using EPL Checker. Good bye."
