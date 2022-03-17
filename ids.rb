@@ -38,9 +38,28 @@ class Ids
   end
 
   def self.club_ids
-    names = {
-      /(tot|spurs|tottenham)/i => 47,
-    }
+    names = [
+      [["man", "mufc", "man united", "manchester united"], 33],
+      [["newcastle", "nufc", "new"], 34],
+      [["watford", "wat"], 38],
+      [["wolves", "wol"], 39], 
+      [["liverpool", "lfc", "reds", "liv"], 40],
+      [["southampton", "sou", "soton"], 41], 
+      [["arsenal", "ars", "afc"], 42], 
+      [["burnley", "bur", "bfc"], 44],
+      [["everton", "eve", "efc"], 45], 
+      [["leicester", "lei", "foxes", "lcfc"], 46],
+      [["tot", "thfc", "spurs", "tottenham"], 47], 
+      [["west ham", "irons", "whu"], 48], 
+      [["chelsea", "cfc", "blues", "che"], 49],
+      [["mcfc", "mcu", "man city", "manchester city"], 50],
+      [["brighton", "bha"], 51], 
+      [["crystal palace", "cry", "palace"], 52],
+      [["brentford", "bre"], 55], 
+      [["leeds", "lee", "lufc"], 63], 
+      [["aston villa", "villa", "avfc"], 66],
+      [["norwich", "nor"], 71],
+    ]
   end
 
 end
