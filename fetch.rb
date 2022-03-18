@@ -4,13 +4,15 @@ class Fetch
   end
 
   def self.matches(daterange)
+    today = Date.today
+    til_sun = 6 - today.wday + 1
+
     case daterange
-      when "today" then date = Date.today
-      when "tomorrow" then date = Date.today + 1
-      # when "week" then date =  # today through sunday
-      # when "weekend" then date =  # saturday and sunday of current week
+      when "today" then Fetch.fetch("/fixtures?date=#{today}")
+      when "tomorrow" then Fetch.fetch("/fixtures?date=#{today + 1}")
+      when "this week" then Fetch.fetch("/fixtures?league=39&season=2021&from=#{today}&to=#{today + til_sun}")
+      when "this weekend" then Fetch.fetch("/fixtures?league=39&season=2021&from=#{today + til_sun - 1}&to=#{today + til_sun}")
     end 
-    Fetch.fetch("/fixtures?date=#{date}")
   end
 
   def self.schedule(club_id)
