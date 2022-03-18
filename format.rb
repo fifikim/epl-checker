@@ -3,7 +3,6 @@ require_relative 'ids'
 
 class Format 
   def self.matches(daterange, data)
-    # puts data
     pl_matches = Parse.matches(data)
     today = Date.today
     til_sun = 6 - today.wday + 1
@@ -20,16 +19,16 @@ class Format
 
   def self.table(data)
     teams = Parse.table(data)
-    puts "\nCurrent Standings: #{data["name"]}\n # | Name                 | MP |  W |  D |  L | GF | GA |  GD |  P " 
+    puts "\nCurrent Standings: \n # | Name                 | MP |  W |  D |  L | GF | GA |  GD |  P " 
     teams.each do |team|
       puts "#{team[:rank]} | #{team[:name]} | #{team[:played]} | #{team[:wins]} | #{team[:draws]} | #{team[:losses]} | #{team[:gf]} | #{team[:ga]} | #{team[:gd]} | #{team[:points]} "
     end
   end
 
   def self.schedule(club_id, data)
-    matches = Parse.schedule(data["response"])
+    matches = Parse.schedule(data)
     club_name = Ids.club_names[club_id]
-    puts "\nUpcoming matches featuring #{club_name}:" # look up name by id
+    puts "\nUpcoming matches featuring #{club_name}:" 
     matches.each { |match| puts "#{match[:date]} | #{match[:time]} | #{match[:tie]} | #{match[:league]} | #{match[:round]}" }
   end
 

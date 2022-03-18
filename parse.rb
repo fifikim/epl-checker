@@ -2,8 +2,7 @@ require_relative 'ids'
 
 class Parse
   def self.table(data)
-    data = data["response"][0]["league"]["standings"][0]
-
+    data = data[0]["league"]["standings"][0]
     teams = data.map do |team|
       goalsf = team["all"]["goals"]["for"].to_i
       goalsa = team["all"]["goals"]["against"].to_i
@@ -21,11 +20,12 @@ class Parse
         points: team["points"].to_s.rjust(2),
       }
     end
+    # puts teams
   end
 
   def self.matches(data)
     epl_sides = Ids.club_names.keys
-    pl_matches = data["response"].select { |match| epl_sides.include?(match["teams"]["home"]["id"]) || epl_sides.include?(match["teams"]["away"]["id"]) }
+    pl_matches = data.select { |match| epl_sides.include?(match["teams"]["home"]["id"]) || epl_sides.include?(match["teams"]["away"]["id"]) }
     Parse.schedule(pl_matches)
   end
 

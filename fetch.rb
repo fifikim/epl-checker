@@ -1,3 +1,5 @@
+require_relative 'ids'
+
 class Fetch 
   def self.table
     Fetch.fetch("/standings?league=39&season=2021")
@@ -6,12 +8,19 @@ class Fetch
   def self.matches(daterange)
     today = Date.today
     til_sun = 6 - today.wday + 1
+    leagues = Ids.leagues.keys 
 
-    case daterange
-      when "today" then Fetch.fetch("/fixtures?date=#{today}")
-      when "tomorrow" then Fetch.fetch("/fixtures?date=#{today + 1}")
-      when "this week" then Fetch.fetch("/fixtures?league=39&season=2021&from=#{today}&to=#{today + til_sun}")
-      when "this weekend" then Fetch.fetch("/fixtures?league=39&season=2021&from=#{today + til_sun - 1}&to=#{today + til_sun}")
+    if daterange == "today" then Fetch.fetch("/fixtures?date=#{today}")
+    elsif daterange == "tomorrow" then Fetch.fetch("/fixtures?date=#{today + 1}")
+    else
+      matches = []
+      startday = today if daterange == "this week" 
+      startday = today + til_sun - 1 if daterange == "this weekend" 
+      leagues.each do |league_id|
+        results = Fetch.fetch("/fixtures?league=#{league_id}&season=2021&from=#{startday}&to=#{today + til_sun}") 
+        matches.concat(results)
+      end
+      matches
     end 
   end
 
@@ -29,7 +38,8 @@ class Fetch
     if response.code != 200
       puts "fetch failed"
     else
-      response.parsed_response
+      res = response.parsed_response
+      res["response"]
     end
   end
 
