@@ -31,7 +31,7 @@ class Parse
 
   def self.schedule(data)
     lengths = []
-    matches = data["response"].map do |match|
+    matches = data.map do |match|
       league_id = match["league"]["id"]
       round_desc = match["league"]["round"]
       season_week = round_desc.split(" - ")

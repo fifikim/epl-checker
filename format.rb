@@ -23,7 +23,7 @@ class Format
   end
 
   def self.schedule(club_id, data)
-    matches = Parse.schedule(data)
+    matches = Parse.schedule(data["response"])
     club_name = Ids.club_names[club_id]
     puts "\nUpcoming matches featuring #{club_name}:" # look up name by id
     matches.each { |match| puts "#{match[:date]} | #{match[:time]} | #{match[:tie]} | #{match[:league]} | #{match[:round]}" }
